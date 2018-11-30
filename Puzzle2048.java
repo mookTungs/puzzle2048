@@ -15,7 +15,8 @@ import java.awt.event.KeyAdapter;
 import java.util.List;
 import java.util.ArrayList;
 import javafx.util.Pair;
-	
+import java.util.Map;
+import java.util.HashMap;
 
 public class Puzzle2048 extends JFrame{
 	final int size = 4;
@@ -23,9 +24,28 @@ public class Puzzle2048 extends JFrame{
 	JButton[][] board = new JButton[size][size];
 	int[][] grid = new int[size][size];
 	List<Pair <Integer, Integer>> empty = new ArrayList<Pair <Integer, Integer>>();
-	
+	Map<Integer,Color> blockColor = new HashMap<Integer,Color>();
 	
 	public Puzzle2048(){
+		blockColor.put(0, new Color(192,192,192));
+		blockColor.put(2, new Color(255,250,240));
+		blockColor.put(4, new Color(255,250,240));
+		blockColor.put(8, new Color(255,218,185));
+		blockColor.put(16, new Color(255,222,173));
+		blockColor.put(32, new Color(244,164,96));
+		blockColor.put(64, new Color(210,105,30));
+		blockColor.put(128, new Color(240,230,140));
+		blockColor.put(256, new Color(255,255,0));
+		blockColor.put(512, new Color(255,215,0));
+		blockColor.put(1024, new Color(218,165,32));
+		blockColor.put(2048, new Color(255,165,0));
+		blockColor.put(4096, new Color(255,140,0));
+		blockColor.put(8192, new Color(255,69,0));
+		blockColor.put(16384, new Color(250,128,114));
+		blockColor.put(32768, new Color(240,128,128));
+		blockColor.put(65536, new Color(255,99,71));
+		blockColor.put(131072, new Color(255,0,0));
+		
 		initAvailableGrid();
 		initUI();
 	}
@@ -51,13 +71,13 @@ public class Puzzle2048 extends JFrame{
 		JPanel buttonPanel = new JPanel();
 		buttonPanel.setPreferredSize(new Dimension(500, 500));
 		buttonPanel.setLayout(new GridLayout(size,size));
-		buttonPanel.setBorder(BorderFactory.createLineBorder(Color.darkGray,10));
+		buttonPanel.setBorder(BorderFactory.createLineBorder(new Color(128,128,128),10));
 		for(int i = 0; i < size; i++){
 			for(int j = 0; j < size; j++){
 				board[i][j] = new JButton();
 				board[i][j].setEnabled(false);
-				board[i][j].setBorder(BorderFactory.createLineBorder(Color.darkGray,5));
-				board[i][j].setBackground(Color.gray);
+				board[i][j].setBorder(BorderFactory.createLineBorder(new Color(128,128,128),5));
+				board[i][j].setBackground(new Color(192,192,192));
 				board[i][j].setOpaque(true);
 				board[i][j].setFont(title.getFont().deriveFont(Font.BOLD, 40f));
 				buttonPanel.add(board[i][j]);
@@ -81,6 +101,8 @@ public class Puzzle2048 extends JFrame{
         });
 		buttonPanel.setFocusable(true);
 		addNext();
+		addNext();
+		updateGrid();
 		
 		panel.add(title, BorderLayout.NORTH);
 		panel.add(buttonPanel, BorderLayout.SOUTH);
@@ -94,7 +116,7 @@ public class Puzzle2048 extends JFrame{
 		Random rand = new Random();
 		int randNum = rand.nextInt(100);
 		int next;
-		if(randNum < 79){
+		if(randNum < 89){
 			next = 2;
 		}else{
 			next = 4;
@@ -160,6 +182,7 @@ public class Puzzle2048 extends JFrame{
 		}else if(empty.size() == 0){
 			System.out.	println("GAME OVER");
 		}
+		updateGrid();
 	}
 	
 	private void moveDown(){
@@ -220,6 +243,7 @@ public class Puzzle2048 extends JFrame{
 		}else if(empty.size() == 0){
 			System.out.	println("GAME OVER");
 		}
+		updateGrid();
 	}
 	
 	private void moveLeft(){
@@ -280,6 +304,7 @@ public class Puzzle2048 extends JFrame{
 		}else if(empty.size() == 0){
 			System.out.	println("GAME OVER");
 		}
+		updateGrid();
 	}
 	
 	private void moveRight(){
@@ -290,7 +315,7 @@ public class Puzzle2048 extends JFrame{
 			int j = 0;
 			while(i > 0){
 				j = i - 1;
-				if(grid[c][j] != 0){
+				if(grid[c][i] != 0){
 					while(j >= 0){
 						if(grid[c][j] == 0){
 							j--;
@@ -340,6 +365,7 @@ public class Puzzle2048 extends JFrame{
 		}else if(empty.size() == 0){
 			System.out.	println("GAME OVER");
 		}
+		updateGrid();
 	}
 		
 	private int getRowCol(){
@@ -355,7 +381,6 @@ public class Puzzle2048 extends JFrame{
 		Pair<Integer, Integer> p = empty.get(coor);
 		grid[p.getKey()][p.getValue()] = getNext();
 		empty.remove(coor);
-		updateGrid();
 	}
 	
 	private void updateGrid(){
@@ -368,6 +393,7 @@ public class Puzzle2048 extends JFrame{
 				}else {
 					board[i][j].setText(Integer.toString(x));
 				}
+				board[i][j].setBackground(blockColor.get(x));
 			}
 		}
 	}

@@ -1,3 +1,3 @@
 # puzzle2048
 2048 puzzle game
-status: developing
+status: game should work, not bug free
